@@ -1,9 +1,10 @@
 from ninja import Router, Form
-from django.shortcuts import Http404
+from django.shortcuts import Http404, get_object_or_404
 from introapi.schemas import (
     Detail,
     UserGetOut,
-    UserPostIn
+    UserPostIn,
+    UserDeleteIn
 )
 from introapi.models import (
     User
@@ -47,3 +48,19 @@ def create_user(request, payload: UserPostIn=Form(...)):
         'message': 'User created',
         'model': UserGetOut.from_orm(user)
     }
+
+
+@router.delete('user/delete',
+               tags=["DELETE"],
+               response={200: Detail, 404: Detail})
+def delete_user(request, payload: UserDeleteIn=Form(...)):
+    try:
+        user = get_object_or_404(User, intra_id = payload.intra_id)
+        user.delete()
+        return 200 , {
+            'message': f'User {payload.intra_id} Delete'
+        }
+    except Http404:
+        return 404 , {
+            'message': f'User {payload.intra_id} not found'
+        }

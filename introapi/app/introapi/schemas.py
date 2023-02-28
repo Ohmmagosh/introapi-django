@@ -22,3 +22,9 @@ class UserPostIn(ModelSchema):
         model = User
         model_fields = ['intra_id', 'favorite_language',
                         'favorite_food', 'favorite_color']
+
+
+class UserDeleteIn(ModelSchema):
+    class Config:
+        model = User
+        model_fields = ['intra_id']
