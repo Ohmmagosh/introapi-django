@@ -25,7 +25,6 @@ def hello(request):
 def get_users(request):
     try:
         users = User.objects.all()
-        print(users)
         return 200, {
             'model': [UserGetOut.from_orm(user) for user in users]
             }
@@ -50,17 +49,19 @@ def create_user(request, payload: UserPostIn=Form(...)):
     }
 
 
-@router.delete('user/delete',
+@router.delete('user/delete/',
                tags=["DELETE"],
                response={200: Detail, 404: Detail})
-def delete_user(request, payload: UserDeleteIn=Form(...)):
+def delete_user(request, payload: UserDeleteIn):
     try:
-        user = get_object_or_404(User, intra_id = payload.intra_id)
+        user = get_object_or_404(User, id = payload.id)
         user.delete()
         return 200 , {
-            'message': f'User {payload.intra_id} Delete'
+            'message': f'User {payload.id} Delete'
         }
     except Http404:
         return 404 , {
-            'message': f'User {payload.intra_id} not found'
+            'message': f'User {payload.id} not found'
         }
+
+

@@ -27,4 +27,4 @@ class UserPostIn(ModelSchema):
 class UserDeleteIn(ModelSchema):
     class Config:
         model = User
-        model_fields = ['intra_id']
+        model_fields = ['id']
